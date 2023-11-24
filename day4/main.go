@@ -9,11 +9,11 @@ import (
 var input = "ckczppom"
 
 func main() {
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 10000000; i++ {
 		str := input + strconv.Itoa(i)
 		hash := createHash(str)
 
-		if hash[:5] == "00000" {
+		if hash[:6] == "000000" {
 			println("The answer is", strconv.Itoa(i), "with hash", hash)
 			return
 		}
