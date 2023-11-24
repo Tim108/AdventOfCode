@@ -22,22 +22,22 @@ func main() {
 }
 
 func navigate(instructions string) (coordinates []Coordinate) {
-	coordinate := Coordinate{0, 0}
-	coordinates = append(coordinates, coordinate)
+	currentCoordinates := []Coordinate{{0, 0}, {0, 0}}
+	coordinates = append(coordinates, Coordinate{0, 0})
 
-	for _, char := range instructions {
+	for i, char := range instructions {
 		if char == left {
-			coordinate.x--
+			currentCoordinates[i%len(currentCoordinates)].x--
 		} else if char == right {
-			coordinate.x++
+			currentCoordinates[i%len(currentCoordinates)].x++
 		} else if char == up {
-			coordinate.y++
+			currentCoordinates[i%len(currentCoordinates)].y++
 		} else if char == down {
-			coordinate.y--
+			currentCoordinates[i%len(currentCoordinates)].y--
 		}
 
-		if !slices.Contains(coordinates, coordinate) {
-			coordinates = append(coordinates, coordinate)
+		if !slices.Contains(coordinates, currentCoordinates[i%len(currentCoordinates)]) {
+			coordinates = append(coordinates, currentCoordinates[i%len(currentCoordinates)])
 		}
 	}
 	return
