@@ -18,7 +18,7 @@ var toggleInstruction = "toggle"
 var rangeInstruction = "through"
 var coordinateSeparator = ","
 
-var lights = [1000][1000]bool{}
+var lights = [1000][1000]int{}
 
 type Coordinate struct {
 	x int
@@ -27,7 +27,7 @@ type Coordinate struct {
 
 func main() {
 	followInstructions(strings.Split(input, "\n"))
-	println(countLights(), "lights lit!")
+	println(countLights(), "total brightness!")
 }
 
 func followInstructions(instructionsList []string) {
@@ -52,7 +52,14 @@ func followInstructions(instructionsList []string) {
 func set(from Coordinate, to Coordinate, state bool) {
 	for x := from.x; x <= to.x; x++ {
 		for y := from.y; y <= to.y; y++ {
-			lights[x][y] = state
+			if state {
+				lights[x][y]++
+			} else {
+				lights[x][y]--
+				if lights[x][y] < 0 {
+					lights[x][y] = 0
+				}
+			}
 		}
 	}
 }
@@ -60,7 +67,7 @@ func set(from Coordinate, to Coordinate, state bool) {
 func toggle(from Coordinate, to Coordinate) {
 	for x := from.x; x <= to.x; x++ {
 		for y := from.y; y <= to.y; y++ {
-			lights[x][y] = !lights[x][y]
+			lights[x][y] += 2
 		}
 	}
 }
@@ -68,9 +75,7 @@ func toggle(from Coordinate, to Coordinate) {
 func countLights() (count int) {
 	for _, rowOfLights := range lights {
 		for _, light := range rowOfLights {
-			if light {
-				count++
-			}
+			count += light
 		}
 	}
 	return
