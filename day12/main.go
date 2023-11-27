@@ -49,6 +49,10 @@ func findIntegers(data []interface{}) (integers []int) {
 
 func valuesOfMap(input map[string]interface{}) (output []interface{}) {
 	for _, mapValue := range input {
+		// If any of the values is "red" we ignore all values of the map for part 2
+		if mapValue == "red" {
+			return make([]interface{}, 0)
+		}
 		output = append(output, mapValue)
 	}
 	return
