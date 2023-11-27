@@ -4,37 +4,32 @@ import (
 	_ "embed"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
 	value := "1113222113"
-	for i := 0; i < 40; i++ {
+	for i := 0; i < 50; i++ {
 		value = lookAndSee(value)
 	}
 	fmt.Printf("%d\n", len(value))
 }
 
-func lookAndSee(input string) (output string) {
-	group := []string{}
+func lookAndSee(input string) string {
+	outputBuilder := strings.Builder{}
+	var group []rune
 
 	for _, char := range input {
-		if len(group) == 0 || group[len(group)-1] == string(char) {
-			group = append(group, string(char))
+		if len(group) == 0 || group[len(group)-1] == char {
+			group = append(group, char)
 		} else {
-			output += groupToString(group)
-			group = []string{string(char)}
+			outputBuilder.WriteString(strconv.Itoa(len(group)))
+			outputBuilder.WriteRune(group[0])
+			group = []rune{char}
 		}
 	}
-	output += groupToString(group)
+	outputBuilder.WriteString(strconv.Itoa(len(group)))
+	outputBuilder.WriteRune(group[0])
 
-	return
-}
-
-func groupToString(input []string) (output string) {
-	if len(input) == 0 {
-		return ""
-	}
-	output += strconv.Itoa(len(input))
-	output += input[0]
-	return
+	return outputBuilder.String()
 }
