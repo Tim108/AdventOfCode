@@ -18,35 +18,53 @@ type Reindeer struct {
 	enduranceTimer int
 	restTimer      int
 	distance       int
+	points         int
 }
 
-var time int
 var herd = []Reindeer{}
 
 func main() {
 	createHerd()
-	for i := 0; i < 2503; i++ {
+	for i := 0; i <= 2503; i++ {
 		elapseSecond()
+		awardPoint()
 	}
 
 	bestReindeer := Reindeer{}
 	for _, reindeer := range herd {
-		if reindeer.distance > bestReindeer.distance {
+		if reindeer.points > bestReindeer.points {
 			bestReindeer = reindeer
 		}
 	}
 
-	fmt.Printf("Best reindeer is %s with a distance of %d", bestReindeer.name, bestReindeer.distance)
+	fmt.Printf("Best reindeer is %s with %d points", bestReindeer.name, bestReindeer.points)
 }
 
-func elapseSecond() {
-	time++
-	for rId := range herd {
-		elapseSecondForReindeer(&herd[rId])
+func awardPoint() {
+	indices := []int{}
+	furthestDistance := -1
+
+	for i, reindeer := range herd {
+		if reindeer.distance > furthestDistance {
+			indices = []int{i}
+			furthestDistance = herd[i].distance
+		} else if reindeer.distance == furthestDistance {
+			indices = append(indices, i)
+		}
+	}
+
+	for _, i := range indices {
+		herd[i].points++
 	}
 }
 
-func elapseSecondForReindeer(reindeer *Reindeer) {
+func elapseSecond() {
+	for rId := range herd {
+		herd[rId].elapseSecond()
+	}
+}
+
+func (reindeer *Reindeer) elapseSecond() {
 	if reindeer.enduranceTimer > 0 {
 		reindeer.enduranceTimer--
 		reindeer.distance += reindeer.speed
@@ -58,8 +76,6 @@ func elapseSecondForReindeer(reindeer *Reindeer) {
 		if reindeer.restTimer == 0 {
 			reindeer.enduranceTimer = reindeer.endurance
 		}
-	} else {
-		reindeer.enduranceTimer = reindeer.endurance
 	}
 }
 
@@ -70,7 +86,7 @@ func createHerd() {
 		speed, _ := strconv.Atoi(words[3])
 		endurance, _ := strconv.Atoi(words[6])
 		rest, _ := strconv.Atoi(words[13])
-		reindeer := Reindeer{name, speed, endurance, rest, 0, 0, 0}
+		reindeer := Reindeer{name, speed, endurance, rest, endurance, 0, 0, 0}
 		herd = append(herd, reindeer)
 	}
 }
